@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/components/static_appbar.dart';
 import 'package:myapp/pages/challenge.dart';
+import 'package:myapp/pages/flashcard.dart';
+import 'package:myapp/pages/practice_test.dart';
 import 'package:myapp/pages/word_choose.dart';
+import 'package:myapp/utils/screen_config.dart';
 
-import '../utils/screen_config.dart';
-import 'flashcard.dart';
 
 class LevelDetail extends StatefulWidget {
   final String moduleTitle;
@@ -119,7 +120,7 @@ class _LevelDetailState extends State<LevelDetail> {
                 elevation: 5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () =>Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeTest())),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
