@@ -4,6 +4,7 @@ import 'package:myapp/pages/challenge.dart';
 import 'package:myapp/pages/word_choose.dart';
 
 import '../utils/screen_config.dart';
+import 'flashcard.dart';
 
 class LevelDetail extends StatefulWidget {
   final String moduleTitle;
@@ -85,7 +86,9 @@ class _LevelDetailState extends State<LevelDetail> {
                 elevation: 5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Flashcard()));
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
