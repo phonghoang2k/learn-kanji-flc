@@ -15,6 +15,8 @@ class Challenge extends StatefulWidget {
   _ChallengeState createState() => _ChallengeState();
 }
 
+enum Status { UNDEFINDED, TRUE, FALSE }
+
 class KeyWord {
   String text;
   String meaning;
@@ -27,7 +29,7 @@ class KeyWord {
 class _ChallengeState extends State<Challenge> {
   bool start = false;
   String quiz;
-  List<bool> _dataCheck;
+  List<Status> _dataCheck;
   List<String> _listQiz = ["Sun/Day", "Nine", "Moon", "Four", "Six", "Five", "Book", "Blue", "Three", "Dog", "Eight", "White", "One", "Fish", "Seven", "Two"];
   List<KeyWord> _listWord = [
     KeyWord(text: "日", meaning: "Sun/Day"),
@@ -50,7 +52,7 @@ class _ChallengeState extends State<Challenge> {
 
   @override
   void initState() {
-    _dataCheck = List.generate(_listWord.length, (index) => false);
+    _dataCheck = List.generate(_listWord.length, (index) => Status.UNDEFINDED);
     quiz = _listQiz.elementAt(Random().nextInt(15));
     super.initState();
     Future.delayed(Duration(milliseconds: 200), () {
@@ -91,21 +93,39 @@ class _ChallengeState extends State<Challenge> {
       itemBuilder: (BuildContext context, int index) {
         return Container(
           margin: EdgeInsets.all(0.5),
-          color: _dataCheck[index] ? Color(0xFF05FF00) : Colors.white,
-          child: FlatButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              setState(() {
-                _dataCheck[index] = true;
-                start = !start;
-                if (start) {
-                  quiz = _listQiz.elementAt(Random().nextInt(15));
-                }
-              });
-            },
-            child: Text(
-              "${_listWord.elementAt(index).text}",
-              style: TextStyle(fontSize: 20, color: Color(0xFF006465)),
+          color: _dataCheck[index] != Status.UNDEFINDED
+              ? _dataCheck[index] != Status.FALSE
+                  ? Color(0xFF05FF00)
+                  : Colors.red
+              : Colors.white,
+          child: AbsorbPointer(
+            absorbing: _dataCheck[index] != Status.UNDEFINDED,
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                setState(() {
+                  print(_listWord[index].meaning);
+                  if (_listWord[index].meaning == quiz) {
+                    _dataCheck[index] = Status.TRUE;
+                  } else {
+                    _dataCheck[index] = Status.FALSE;
+                    _dataCheck[_listWord.indexWhere((element) => element.meaning == quiz)] = Status.TRUE;
+                  }
+                });
+                Future.delayed(Duration(milliseconds: 200), () {
+                  setState(() {
+                    (_dataCheck[index] == Status.FALSE) ? _dataCheck[index] = Status.UNDEFINDED : {};
+                    start = !start;
+                    if (start) {
+                      quiz = _listQiz.elementAt(Random().nextInt(15));
+                    }
+                  });
+                });
+              },
+              child: Text(
+                "${_listWord.elementAt(index).text}",
+                style: TextStyle(fontSize: 20, color: Color(0xFF006465)),
+              ),
             ),
           ),
         );
